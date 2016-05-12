@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:paddingTop="10dp"
+             android:paddingLeft="5dp"
+             tools:context="com.group9.systemmonitor.TaskManagerProcess">
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/procIcon"
+        android:src="@mipmap/ic_process_default"
+        android:maxWidth="50dp"
+        android:maxHeight="50dp"
+        android:adjustViewBounds="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:paddingLeft="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/txtLItem"
+        android:layout_alignParentTop="true"
+        android:textSize="15sp"
+        android:layout_toEndOf="@+id/procIcon"
+        android:layout_toRightOf="@+id/procIcon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:paddingLeft="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/txtSubItem"
+        android:layout_alignBottom="@+id/procIcon"
+        android:layout_toEndOf="@+id/procIcon"
+        android:layout_toRightOf="@+id/procIcon"/>
+
+</RelativeLayout>
