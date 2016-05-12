@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -132,6 +133,9 @@ public class MainActivity extends AppCompatActivity
     // Method for refreshing Process List
     void  refreshProcList ()
     {
+        // For gettting the application label using the selected packages as shown below
+        final PackageManager pm = getApplicationContext().getPackageManager();
+
 
         new AsyncTask<Void, Void, List<ProcessManager.Process>>() {
 
@@ -163,16 +167,27 @@ public class MainActivity extends AppCompatActivity
                 procID = new Integer[howmanyprocs];
                 procListFull = new String[howmanyprocs][2];
                 Drawable[] procIcons = new Drawable[howmanyprocs];
-                String processLabel;
+
                 TextView txtNumProc = (TextView) findViewById(R.id.no_of_procs_number);
-                txtNumProc.setText(String.valueOf(howmanyprocs)); //"" to make the whole thing string
-                //Converting to process list to string of arrays
+                txtNumProc.setText(String.valueOf(howmanyprocs));
                 for (int i = 0; i<howmanyprocs; i++){
+
                     procList[i]=processes.get(i).name;
                     procID[i]=processes.get(i).pid;
-                    processLabel = processes.get(i).name;
-                    procListFull[i][0]=processLabel;
+
+                    ApplicationInfo ai;
+                    try {
+                        ai = pm.getApplicationInfo( processes.get(i).getPackageName(), 0);
+                    } catch (final PackageManager.NameNotFoundException e) {
+                        ai = null;
+                    }
+
+                    final String applicationName = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
+
+                    procListFull[i][0]=applicationName;
                     procListFull[i][1]=processes.get(i).name;
+
+
                     //get app icons, if it cant then get default icon
                     try
                     {
@@ -183,9 +198,9 @@ public class MainActivity extends AppCompatActivity
                         procIcons[i]= ContextCompat.getDrawable(MainActivity.this,R.mipmap.ic_process_default); //getResources().getDrawable(R.drawable.processIcon); //check
                     }
                 }
+
+                // Populate list view with all details (app name, package name, icons)
                 lvProcList = (ListView) findViewById(R.id.lv_proc);
-                //ArrayAdapter<String> prcoAdapter = new ArrayAdapter<String>(this,android.R.layout .simple_expandable_list_item_1 ,procList);
-                //lvProcList.setAdapter(prcoAdapter);
                 ArrayAdapter procAdapter = new MyListAdapter(procListFull,procIcons);
                 lvProcList.setAdapter(procAdapter);
 
@@ -304,25 +319,7 @@ public class MainActivity extends AppCompatActivity
         //end of messagebox
     }
 
-      //Old root finder (obsolete)
-//    private static boolean isRooted() {
-//        return findBinary("su");
-//    }
-//
-//    public static boolean findBinary(String binaryName) {
-//        boolean found = false;
-//        if (!found) {
-//            String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-//                    "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
-//            for (String where : places) {
-//                if ( new File( where + binaryName ).exists() ) {
-//                    found = true;
-//                    break;
-//                }
-//            }
-//        }
-//        return found;
-//    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
